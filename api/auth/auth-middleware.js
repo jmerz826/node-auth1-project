@@ -10,7 +10,7 @@ const User = require("../users/users-model");
   }
 */
 function restricted(req, res, next) {
-  if (req.session.user) {
+  if (req.session?.user) {
     next();
   } else {
     next({ status: 401, message: "You shall not pass!" });
@@ -51,7 +51,9 @@ function checkUsernameFree(req, res, next) {
     "message": "Invalid credentials"
   }
 */
-function checkUsernameExists(req, res, next) {}
+function checkUsernameExists(req, res, next) {
+
+}
 
 /*
   If password is missing from req.body, or if it's 3 chars or shorter

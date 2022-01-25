@@ -7,6 +7,8 @@ const {
 } = require("./auth-middleware");
 const router = require("express").Router();
 const User = require("../users/users-model");
+const bcrypt = require('bcryptjs')
+
 
 /**
   1 [POST] /api/auth/register { "username": "sue", "password": "1234" }
@@ -32,8 +34,11 @@ const User = require("../users/users-model");
  */
 router.post("/register", (req, res, next) => {
   try {
-    User.add(req.body)
-      .then(newUser => res.status(201).json(newUser))
+    const { username, password } = req.body
+    const hash = bcrypt.hashSync(password, 10)
+    const newUser = {username, password: hash}
+    User.add(newUser)
+      .then(newbie => res.status(201).json(newbie))
       .catch((err) => next(err));
   } catch (err) {
     next(err);

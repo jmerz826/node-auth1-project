@@ -32,7 +32,7 @@ const bcrypt = require('bcryptjs')
     "message": "Password must be longer than 3 chars"
   }
  */
-router.post("/register", (req, res, next) => {
+router.post("/register", checkUsernameFree, (req, res, next) => {
   try {
     const { username, password } = req.body
     const hash = bcrypt.hashSync(password, 10)

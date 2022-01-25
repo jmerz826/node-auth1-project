@@ -1,4 +1,5 @@
-const req = require("express/lib/request")
+const req = require("express/lib/request");
+const User = require("../users/users-model");
 
 /*
   If the user does not have a session saved in the server
@@ -10,9 +11,9 @@ const req = require("express/lib/request")
 */
 function restricted(req, res, next) {
   if (req.session.user) {
-    next()
+    next();
   } else {
-    next({status: 401, message: 'You shall not pass!'})
+    next({ status: 401, message: "You shall not pass!" });
   }
 }
 
@@ -25,7 +26,21 @@ function restricted(req, res, next) {
   }
 */
 function checkUsernameFree(req, res, next) {
-
+  try {
+    User.findBy({
+      username: req.body.username,
+    })
+      .then((exists) => {
+        if (!exists) {
+          next();
+        } else {
+          next({ status: 422, message: "username taken" });
+        }
+      })
+      .catch((err) => next(err));
+  } catch (err) {
+    next(err);
+  }
 }
 
 /*
@@ -36,9 +51,7 @@ function checkUsernameFree(req, res, next) {
     "message": "Invalid credentials"
   }
 */
-function checkUsernameExists(req, res, next) {
-
-}
+function checkUsernameExists(req, res, next) {}
 
 /*
   If password is missing from req.body, or if it's 3 chars or shorter
@@ -48,9 +61,12 @@ function checkUsernameExists(req, res, next) {
     "message": "Password must be longer than 3 chars"
   }
 */
-function checkPasswordLength(req, res, next) {
-
-}
+function checkPasswordLength(req, res, next) {}
 
 // Don't forget to add these to the `exports` object so they can be required in other modules
-module.exports = {restricted, checkUsernameFree, checkUsernameExists, checkPasswordLength}
+module.exports = {
+  restricted,
+  checkUsernameFree,
+  checkUsernameExists,
+  checkPasswordLength,
+};

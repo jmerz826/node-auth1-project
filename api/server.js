@@ -24,7 +24,7 @@ server.use(helmet());
 server.use(express.json());
 server.use(cors());
 server.use(session({
-  name: 'monkey',
+  name: 'chocolatechip',
   secret: process.env.SECRET || 'tis a secret',
   cookie: {
     maxAge: 1000 * 60 * 60,
